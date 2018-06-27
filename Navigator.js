@@ -2,24 +2,30 @@ import React from "react";
 import { createStackNavigator } from "react-navigation";
 import { graphql, withApollo } from "react-apollo";
 import gql from "graphql-tag";
-import { StyleSheet, View, ActivityIndicator, Button } from "react-native";
+import { StyleSheet, View, ActivityIndicator } from "react-native";
 import Post from "./components/money/Post";
 import Posts from "./components/money/Posts";
 import NewPost from "./components/money/NewPost";
 import Login from "./components/user/Login";
 import UpdatePost from "./components/money/EditPost";
-import { Fab, Icon } from "native-base";
+import HeaderRight from './components/header/HeaderRight'
+import { Fab, Icon, Button,Container, } from "native-base";
 import navigationStyles from "./styles/navigationStyles";
 import { signOut } from "./loginUtils";
 
 class Home extends React.Component {
-  static navigationOptions = {
-    title: "Home",
-    ...navigationStyles
+  static navigationOptions = ({navigation}) => {    
+    return{
+      title: navigation.state.routeName,
+    }
   };
 
 
   // navigation once logged in. either create new post or view old money
+  goHome = () => {
+    console.log('testing', );
+    
+  }
   goToPost = () => {
     this.props.navigation.navigate("Post");
   };
@@ -28,7 +34,7 @@ class Home extends React.Component {
   };
   render() {
     return (
-      <View style={styles.container}>
+      <Container style={styles.container}>
         <Posts {...this.props} />
         <Button
           title="LogOut"
@@ -40,7 +46,7 @@ class Home extends React.Component {
         <Fab style={styles.newPost} onPress={this.addNewPost}>
           <Icon name="add" />
         </Fab>
-      </View>
+      </Container>
     );
   }
 }
@@ -73,6 +79,12 @@ const Navigator = createStackNavigator({
   UpdatePost: {
     screen: UpdatePost
   }
+},{
+  initialRouteName: 'Home',
+  navigationOptions :  {
+    headerRight: <HeaderRight  />,
+    ...navigationStyles
+  }
 });
 
 
@@ -80,7 +92,7 @@ const Navigator = createStackNavigator({
 const NavWrapper = ({ loading, user }) => {
   if (loading) return <ActivityIndicator size="large" />;
   if (!user) return <Login />;
-  return <Navigator screenProps={{ user }} />;
+  return <Navigator  screenProps={{ user }} />;
 };
 
 // graphql to get all posts by a user
