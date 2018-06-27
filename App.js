@@ -5,8 +5,8 @@ import { InMemoryCache } from "apollo-cache-inmemory";
 import { ApolloClient } from "apollo-client";
 import { setContext } from "apollo-link-context";
 import { getToken } from "./loginUtils";
-import graphKey  from "./graphKey";
-import Navigator from './Navigator';
+import graphKey from "./graphKey";
+import Navigator from "./Navigator";
 
 // sets context for apollo link
 const authLink = setContext(async (req, { headers }) => {
