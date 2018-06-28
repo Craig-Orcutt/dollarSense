@@ -5,32 +5,30 @@ import { graphql } from "react-apollo";
 import gql from "graphql-tag";
 import navigationStyles from "../../styles/navigationStyles";
 
-class Post extends Component {
+class Purchase extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
       title: navigation.state.params.title,
-      ...navigationStyles,
-      headerRight: <Icon name='menu' onPress={this.goHome} />
+      ...navigationStyles
     };
   };
 
-
-  updatePost = () => {
-    const { Post } = this.props;
+  updatePurchase = () => {
+    const { Purchase } = this.props;
     this.props.navigation.navigate("UpdatePost", {
-      id: Post.id,
-      title: Post.title
-    })
-  }
+      id: Purchase.id,
+      title: Purchase.item
+    });
+  };
   render() {
-    
-    const { Post, loading  } = this.props;
+    const { Purchase, loading } = this.props;
 
     if (loading) return <ActivityIndicator size="large" color="#BADA55" />;
     return (
       <View style={styles.container}>
-        <Text style={styles.bodyText}>{Post.body}</Text>
-        <Fab style={styles.edit} onPress={this.updatePost}>
+        <Text style={styles.bodyText}>{Purchase.price}</Text>
+        <Text style={styles.bodyText}>{Purchase.category}</Text>
+        <Fab style={styles.edit} onPress={this.updatePurchase}>
           <Icon type="FontAwesome" name="edit" />
         </Fab>
       </View>
@@ -38,29 +36,30 @@ class Post extends Component {
   }
 }
 
-const postQuery = gql`
-  query Post($id: ID!) {
-    Post(id: $id) {
+const purchaseQuery = gql`
+  query Purchase($id: ID!) {
+    Purchase(id: $id) {
       id
-      body
-      title
+      item
+      price
+      category
     }
   }
 `;
 
-export default graphql(postQuery, {
+export default graphql(purchaseQuery, {
   props: ({ data }) => ({ ...data }),
   options: ({ navigation }) => ({
     variables: {
       id: navigation.state.params.id
     }
   })
-})(Post);
+})(Purchase);
 
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    flex: 1,
+    flex: 1
     // justifyContent: "space-between"
   },
   bodyText: {

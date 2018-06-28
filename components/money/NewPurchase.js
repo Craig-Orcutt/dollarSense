@@ -3,7 +3,6 @@ import { View, ActivityIndicator } from "react-native";
 import { graphql } from "react-apollo";
 import gql from "graphql-tag";
 import PurchaseForm from "./PurchaseForm";
-import navigationStyles from "../../styles/navigationStyles";
 
 class NewPurchase extends Component {
   state = {
@@ -15,18 +14,19 @@ class NewPurchase extends Component {
   //   ...navigationStyles
   // };
 
-  newPurchase = ({ item, price }) => {
+  newPurchase = ({ item, price, category }) => {
     const { newPurchase, navigation, screenProps } = this.props;
     this.setState({ loading: true });
     newPurchase({
       variables: {
         item,
         price,
+        category,
         userId: screenProps.user.id
       }
     })
       .then(() => {
-        navigation.goBack();
+        navigation.navigate("Purchases");
       })
       .catch(err => {
         console.log("err", err);
@@ -50,8 +50,18 @@ class NewPurchase extends Component {
 }
 
 const newPurchase = gql`
-  mutation newPurchase($item: String!, $price: Int!, $userId: ID!) {
-    createPurchase(item: $item, price: $price, userId: $userId) {
+  mutation newPurchase(
+    $item: String!
+    $price: Int!
+    $userId: ID!
+    $category: String!
+  ) {
+    createPurchase(
+      item: $item
+      price: $price
+      userId: $userId
+      category: $category
+    ) {
       id
     }
   }
