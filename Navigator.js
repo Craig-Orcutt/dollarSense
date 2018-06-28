@@ -5,16 +5,14 @@ import gql from "graphql-tag";
 
 // style stuff
 import { StyleSheet, View, ActivityIndicator } from "react-native";
-import { Fab, Icon, Button, Container } from "native-base";
+import { Fab, Icon, Button, Container, Text } from "native-base";
 import navigationStyles from "./styles/navigationStyles";
 
 // Components
-import Post from "./components/money/Post";
-import Posts from "./components/money/Posts";
-import NewPost from "./components/money/NewPost";
 import Login from "./components/user/Login";
-import UpdatePost from "./components/money/EditPost";
 import NewPurchase from "./components/money/NewPurchase";
+import Purchases from "./components/money/Purchases";
+import Purchase from "./components/money/Purchase";
 import HeaderRight from "./components/header/HeaderRight";
 import { signOut } from "./loginUtils";
 
@@ -26,19 +24,18 @@ class Home extends React.Component {
   };
 
   // navigation once logged in. either create new post or view old money
-  goToPost = () => {
-    this.props.navigation.navigate("Post");
-  };
-  addNewPost = () => {
-    this.props.navigation.navigate("NewPost");
-  };
+
   addNewPurchase = () => {
     this.props.navigation.navigate("NewPurchase");
+  };
+  goToPurchases = () => {
+    this.props.navigation.navigate("Purchases");
   };
   render() {
     return (
       <Container style={styles.container}>
-        <Posts {...this.props} />
+        <Purchases {...this.props} />
+
         <Button
           title="LogOut"
           onPress={() => {
@@ -47,18 +44,11 @@ class Home extends React.Component {
           }}
         />
         <Fab
-          position="bottomRight"
-          style={styles.newPost}
-          onPress={this.addNewPost}
-        >
-          <Icon type='FontAwesome' name="plus" />
-        </Fab>
-        <Fab
           position="bottomLeft"
           style={styles.newPost}
           onPress={this.addNewPurchase}
         >
-          <Icon  type='FontAwesome' name="dollar" />
+          <Icon type="FontAwesome" name="dollar" />
         </Fab>
       </Container>
     );
@@ -71,8 +61,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between"
   },
   newPost: {
-    backgroundColor: "#82D8D8",
-
+    backgroundColor: "#82D8D8"
   },
   newPostText: {
     fontSize: 20,
@@ -86,18 +75,15 @@ const Navigator = createStackNavigator(
     Home: {
       screen: withApollo(Home)
     },
-    Post: {
-      screen: Post
-    },
-    NewPost: {
-      screen: NewPost
-    },
-    UpdatePost: {
-      screen: UpdatePost
-    },
     NewPurchase: {
       screen: NewPurchase
     },
+    Purchases: {
+      screen: Purchases
+    },
+    Purchase: {
+      screen: Purchase
+    }
   },
   {
     initialRouteName: "Home",
@@ -122,9 +108,11 @@ const userQuery = gql`
     user {
       id
       email
-      posts(orderBy: createdAt_DESC) {
+      purchases(orderBy: createdAt_DESC) {
         id
-        title
+        item
+        price
+        category
       }
     }
   }
