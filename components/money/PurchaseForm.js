@@ -10,30 +10,57 @@ export default class PurchaseForm extends Component {
   state = {
     item: this.props.purchase.item || "",
     price: this.props.purchase.price || "",
-    category: this.props.purchase.category || ""
+    category: this.props.purchase.category || "",
+    itemError: false,
+    categoryError: false,
+    priceError: false,
+  };
+
+  validate = () => {
+    let isError = false;
+    const errors = {};
+
+    if (this.state.item === '') {
+      this.setState({
+        itemError: true
+      });
+    }
+    if (this.state.price === '') {
+      this.setState({
+        priceError: true
+      });
+    }
+    if (this.state.category === '') {
+      this.setState({
+        cateroryError: true
+      });
+    }
+
+    return this.state
   };
 
   submitForm = () => {
-    console.log("this.state", this.state);
-
-    this.props.onSubmit({
-      item: this.state.item,
-      price: parseInt(this.state.price),
-      category: this.state.category
-    });
+    const err = this.validate();
+    if (!err) {
+      this.props.onSubmit({
+        item: this.state.item,
+        price: parseInt(this.state.price),
+        category: this.state.category
+      });
+    }
   };
   render() {
     return (
       <Form style={styles.form}>
-        <Item floatingLabel>
-          <Label>What did you buy? </Label>
+        <Item floatingLabel error={this.state.itemError ? true : false}>
+          <Label>What Did You Buy? </Label>
           <Input
             onChangeText={item => this.setState({ item })}
             value={this.state.title}
           />
         </Item>
-        <Item floatingLabel>
-          <Label>How Much was it?</Label>
+        <Item floatingLabel error={this.state.priceError ? true : false}>
+          <Label>How Much Was It?</Label>
           <Input
             onChangeText={price => this.setState({ price })}
             value={this.state.price}
@@ -41,10 +68,11 @@ export default class PurchaseForm extends Component {
           />
         </Item>
         <Picker
+          error={this.state.categoryError ? true : false}
           selectedValue={this.state.category}
           onValueChange={category => this.setState({ category })}
           triggerType="onClick"
-          style={{ height: 50, width: 100 }}
+          style={styles.picker}
         >
           <Picker.Item label="Dining" value={"dining"} />
           <Picker.Item label="Fuel" value={"fuel"} />
@@ -65,16 +93,18 @@ const styles = StyleSheet.create({
   button: {
     width: "100%",
     height: 50,
-    backgroundColor: "#FF9800",
-    justifyContent: "center",
+    // backgroundColor: "#FF9800",
+    // justifyContent: "center",
     alignItems: "center",
     position: "absolute",
-    bottom: 100
+    bottom: 200
   },
   form: {
     width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height,
-    borderColor: "#BADA55",
-    borderWidth: 2
+    height: Dimensions.get("window").height
+  },
+  picker: {
+    width: "100%",
+    marginTop: 10
   }
 });
