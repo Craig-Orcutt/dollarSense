@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { TextInput, View, StyleSheet, Picker, Dimensions } from "react-native";
-import { Form, Item, Input, Label, Button, Text } from "native-base";
+import { Form, Item, Input, Label, Button, Text, Toast } from "native-base";
 
 export default class PurchaseForm extends Component {
   static defaultProps = {
@@ -13,33 +13,52 @@ export default class PurchaseForm extends Component {
     category: this.props.purchase.category || "",
     itemError: false,
     categoryError: false,
-    priceError: false,
+    priceError: false
   };
+
+
 
   validate = () => {
     let isError = false;
     const errors = {};
 
-    if (this.state.item === '') {
+    if (this.state.item === "") {
       this.setState({
         itemError: true
       });
+      Toast.show({
+        text: "You didn't tell me what you bought!",
+        buttonText: "Okay",
+        duration: 3000
+      })
     }
-    if (this.state.price === '') {
+    if (this.state.price === "") {
       this.setState({
         priceError: true
-      });
+      })
+      Toast.show({
+        text: "Don't forget to tell me how much it was!",
+        buttonText: "Okay",
+        duration: 3000
+      })
     }
-    if (this.state.category === '') {
+    if (this.state.category === "") {
       this.setState({
-        cateroryError: true
-      });
+        categoryError: true
+      })
+      Toast.show({
+        text: "What category does it fall in to?",
+        buttonText: "Okay",
+        duration: 3000
+      })
     }
 
-    return this.state
+    return this.state;
   };
 
   submitForm = () => {
+    console.log('hello', );
+    
     const err = this.validate();
     if (!err) {
       this.props.onSubmit({
@@ -49,7 +68,13 @@ export default class PurchaseForm extends Component {
       });
     }
   };
+
   render() {
+    const blankField =
+    this.state.item.length > 0 &&
+    this.state.price.length > 0 &&
+    this.state.category.length > 0;
+
     return (
       <Form style={styles.form}>
         <Item floatingLabel error={this.state.itemError ? true : false}>
@@ -81,7 +106,11 @@ export default class PurchaseForm extends Component {
           <Picker.Item label="Gifts" value={"gifts"} />
           <Picker.Item label="Recreation" value={"recreation"} />
         </Picker>
-        <Button full success style={styles.button} onPress={this.submitForm}>
+        <Button
+          disabled={!blankField}
+          full
+          onPress={this.submitForm}
+        >
           <Text> "Save Purchase"</Text>
         </Button>
       </Form>
@@ -93,7 +122,7 @@ const styles = StyleSheet.create({
   button: {
     width: "100%",
     height: 50,
-    // backgroundColor: "#FF9800",
+    backgroundColor: "#BADA55",
     // justifyContent: "center",
     alignItems: "center",
     position: "absolute",
