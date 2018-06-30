@@ -4,6 +4,7 @@ import { HttpLink } from "apollo-link-http";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { ApolloClient } from "apollo-client";
 import { setContext } from "apollo-link-context";
+import {Root} from 'native-base';
 import { getToken } from "./loginUtils";
 import {graphKey} from "./graphKey";
 import Navigator from "./Navigator";
@@ -38,7 +39,9 @@ export default class App extends React.Component {
   render() {
     return (
       <ApolloProvider client={client}>
+        <Root> 
         <Navigator />
+        </Root>
       </ApolloProvider>
     );
   }
