@@ -23,37 +23,40 @@ export default class PurchaseForm extends Component {
     const errors = {};
 
     if (this.state.item === "") {
-      this.setState({
-        itemError: true
-      });
+      isError = true
+      errors.itemError = "You didn't tell me what you bought!"
       Toast.show({
-        text: "You didn't tell me what you bought!",
+        text: errors.itemError,
         buttonText: "Okay",
         duration: 3000
       })
     }
     if (this.state.price === "") {
-      this.setState({
-        priceError: true
-      })
+      isError = true
+      errors.priceError = "Don't forget to tell me how much it was!"
       Toast.show({
-        text: "Don't forget to tell me how much it was!",
+        text: errors.priceError,
         buttonText: "Okay",
         duration: 3000
       })
     }
     if (this.state.category === "") {
-      this.setState({
-        categoryError: true
-      })
+      isError = true
+      errors.categoryError = "What category does it fall in to?"
       Toast.show({
-        text: "What category does it fall in to?",
+        text: errors.categoryError,
         buttonText: "Okay",
         duration: 3000
       })
     }
+    if(isError) {
+      this.setState({
+        ...this.state,
+        ...errors
+      })
+    }
 
-    return this.state;
+    return isError;
   };
 
   submitForm = () => {
