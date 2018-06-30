@@ -39,9 +39,9 @@ export default class App extends React.Component {
   render() {
     return (
       <ApolloProvider client={client}>
-
+        <Root> 
         <Navigator />
-
+        </Root>
       </ApolloProvider>
     );
   }
